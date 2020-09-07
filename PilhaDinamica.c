@@ -46,10 +46,8 @@ int pop(celula **pilha) {
 }
 
 int imprimirPilha(celula **pilha) {
-  while (!pilhaVazia(pilha)) {
-    printf("%d ", (*pilha)->info);
-    pop(pilha);
-  }
+  while (!pilhaVazia(pilha))
+    printf("%d ", pop(pilha));
 }
 
 int main(void) {
