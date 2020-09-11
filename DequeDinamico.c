@@ -14,7 +14,7 @@ typedef struct Deque {
 
 void inicializar(Deque **deque) {
    *deque = (Deque *) malloc(sizeof(Deque));
-   if (deque)
+   if (*deque)
       (*deque)->inicio = (*deque)->fim = NULL;
    else printf("\nERRO DE MEMORIA\n");
 }
