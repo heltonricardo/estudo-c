@@ -139,6 +139,7 @@ int menu(void) {
     printf(" [11] - Inserir elemento em posicao arbitraria\n");
     printf(" [12] - Inverter lista\n");
     printf(" [13] - Ordenar lista\n");
+    printf(" [ 0] - Encerrar programa\n");
 
     printf("\n Entre a opcao: "); scanf("%d", &opcao);
   } while (opcao < 0 || 13 < opcao);
@@ -153,9 +154,7 @@ int main(void) {
   while (1)
     switch (menu()) {
 
-      case 0:
-        free(&lista);
-        exit(0);
+      case 0: exit(0);
 
       case 1:
         inicializarLista(&lista);
