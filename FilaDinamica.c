@@ -51,7 +51,7 @@ int desenfileirar(Fila *fila) {
    if (filaVazia(fila)) return 0;
 
    int valor = fila->inicio->valor;
-   Fila *rmv = fila->inicio;
+   node *rmv = fila->inicio;
    fila->inicio = fila->inicio->prox;
 
    free(rmv);
