@@ -1,69 +1,51 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 typedef struct node {
   int v;
   struct node *p;
 } node;
 
-
 node *criarNo(int v) {
-
   node *novo = (node *) malloc(sizeof(node));
-
   if (novo) {
     novo->v = v;
     novo->p = 0;
   }
-
   return novo;
 }
 
-
 void inserir(node **lista, int v) {
-
   node *novo = criarNo(v);
   if (!novo) return;
-
-  node *aux = *lista;
-  if (aux->v > v) {
+  if (v < (*lista)->v) {
     novo->p = *lista;
     *lista = novo;
     return;
   }
-
+  node *aux = *lista;
   while (aux->p && aux->p->v < v)
     aux = aux->p;
-
   novo->p = aux->p;
   aux->p = novo;
 }
 
-
 void exibir(node *lista) {
-
   if (lista) {
     printf("%d ", lista->v);
     exibir(lista->p);
   }
-
-  else
-    printf("\n");
+  else printf("\n");
 }
-
 
 void liberar(node *lista) {
-
-  if (lista->p)
+  if (lista) {
     liberar(lista->p);
-
-  free(lista);
+    free(lista);
+  }
 }
 
-
 int main(void) {
-
   node *lista = criarNo(13);
   if (!lista) return 1;
 
@@ -75,8 +57,7 @@ int main(void) {
     inserir(&lista, valores[i]);
 
   exibir(lista);
+  liberar(lista);
 
-  free(lista);
   return 0;
 }
-
