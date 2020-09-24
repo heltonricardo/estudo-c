@@ -65,7 +65,7 @@ node *pesquisar(node *arvore, int valor) {
 }
 
 void pesquisa(node *arvore, int valor) {
-   printf("\nO valor %d ");
+   printf("\nO valor %d ", valor);
    if (!pesquisar(arvore, valor)) printf("nao ");
    printf("existe na arvore!");
 }
@@ -79,12 +79,14 @@ void *inserir(node **arvore, int valor) {
       inserir(&(*arvore)->esq, valor);
 }
 
-node *retirarMaior(node **arvore) {
+int retirarMaior(node **arvore) {
    if ((*arvore)->dir)
       return retirarMaior(&(*arvore)->dir);
    node *maior = *arvore;
+   int valor = maior->valor;
    *arvore = (*arvore)->esq;
-   return maior;
+   free(maior);
+   return valor;
 }
 
 void remover(node **arvore, int valor) {
@@ -93,27 +95,20 @@ void remover(node **arvore, int valor) {
 
          int classif = (*arvore)->esq ? 1 : 0;
          classif = (*arvore)->dir ? classif ? 3 : 2 : classif;
-         // 0 -> Sem filhos
-         // 1 -> Um filho (à esquerda)
-         // 2 -> Um filho (à direita)
-         // 3 -> Dois filhos
 
-         if (classif == 0) {
+         if (classif == 0) { // Sem filhos
             free(*arvore);
             *arvore = NULL;
-         } else if (classif == 1) {
+         } else if (classif == 1) { // Um filho (à esquerda)
             node *rmv = *arvore;
             *arvore = (*arvore)->esq;
             free(rmv);
-         } else if (classif == 2) {
+         } else if (classif == 2) { // Um filho (à direita)
             node *rmv = *arvore;
             *arvore = (*arvore)->dir;
             free(rmv);
-         } else if (classif == 3) {
-            node *rmv = retirarMaior(&(*arvore)->esq);
-            (*arvore)->valor = rmv->valor;
-            free(rmv);
-         }
+         } else if (classif == 3) // Dois filhos
+            (*arvore)->valor = retirarMaior(&(*arvore)->esq);
       }
       else if (valor < (*arvore)->valor)
          remover(&(*arvore)->esq, valor);
@@ -155,8 +150,10 @@ int main(void) {
    inserir(&arvore, 3);
 
    imprimir(arvore);
+   printf("\n\nRAIZ: %d", arvore->valor);
    menorValor(arvore);
    maiorValor(arvore);
+   printf("\n");
 
    pesquisa(arvore, 11);
    pesquisa(arvore, 6);
@@ -168,10 +165,10 @@ int main(void) {
    pesquisa(arvore, 23);
    pesquisa(arvore, 61);
 
-   printf("\n\nREMOVER\n\n");
+   printf("\n\nRemovendo a raiz\n\n");
    remover(&arvore, 11);
    imprimir(arvore);
-   printf("\n\nRAIZ: %d\n", arvore->valor);
+   printf("\n\nRAIZ: %d", arvore->valor);
 
    limpar(arvore);
    printf("\n");
