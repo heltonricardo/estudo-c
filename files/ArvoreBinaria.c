@@ -65,7 +65,9 @@ node *pesquisar(node *arvore, int valor) {
 }
 
 void pesquisa(node *arvore, int valor) {
-   printf(pesquisar(arvore, valor) ? "\nEncontrado!" : "\nNao encontrado!");
+   printf("\nO valor %d ");
+   if (!pesquisar(arvore, valor)) printf("nao ");
+   printf("existe na arvore!");
 }
 
 void *inserir(node **arvore, int valor) {
@@ -77,12 +79,24 @@ void *inserir(node **arvore, int valor) {
       inserir(&(*arvore)->esq, valor);
 }
 
+node *retirarMaior(node **arvore) {
+   if ((*arvore)->dir)
+      return retirarMaior(&(*arvore)->dir);
+   node *maior = *arvore;
+   *arvore = (*arvore)->esq;
+   return maior;
+}
+
 void remover(node **arvore, int valor) {
    if (*arvore) {
       if ((*arvore)->valor == valor) {
 
          int classif = (*arvore)->esq ? 1 : 0;
          classif = (*arvore)->dir ? classif ? 3 : 2 : classif;
+         // 0 -> Sem filhos
+         // 1 -> Um filho (à esquerda)
+         // 2 -> Um filho (à direita)
+         // 3 -> Dois filhos
 
          if (classif == 0) {
             free(*arvore);
@@ -96,13 +110,10 @@ void remover(node **arvore, int valor) {
             *arvore = (*arvore)->dir;
             free(rmv);
          } else if (classif == 3) {
-            node *rmv = menorElemento((*arvore)->dir);
-            (*arvore)->esq = rmv->esq;
-            (*arvore)->dir = rmv->dir;
+            node *rmv = retirarMaior(&(*arvore)->esq);
+            (*arvore)->valor = rmv->valor;
             free(rmv);
-            remover(&(*arvore)->dir, (*arvore)->valor);
          }
-
       }
       else if (valor < (*arvore)->valor)
          remover(&(*arvore)->esq, valor);
@@ -141,6 +152,7 @@ int main(void) {
    inserir(&arvore, 10);
    inserir(&arvore, 31);
    inserir(&arvore, 49);
+   inserir(&arvore, 3);
 
    imprimir(arvore);
    menorValor(arvore);
@@ -155,6 +167,11 @@ int main(void) {
    pesquisa(arvore, 3);
    pesquisa(arvore, 23);
    pesquisa(arvore, 61);
+
+   printf("\n\nREMOVER\n\n");
+   remover(&arvore, 11);
+   imprimir(arvore);
+   printf("\n\nRAIZ: %d\n", arvore->valor);
 
    limpar(arvore);
    printf("\n");
